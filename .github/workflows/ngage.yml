@@ -32,7 +32,7 @@ jobs:
           cmake -S "${{ steps.ngagesdk.outputs.prefix }}/setup" `
                 -B "${{ steps.ngagesdk.outputs.prefix }}/setup/build" `
                 -G Ninja      
-          cmake --build "$NGAGESDK/setup/build"
+          cmake --build "${{ steps.ngagesdk.outputs.prefix }}/setup/build"
 
       - uses: madebr/setup-sdl@master
         with:
@@ -47,7 +47,7 @@ jobs:
           cmake -S . `
                 -B build `
                 -G Ninja `
-                -DCMAKE_TOOLCHAIN_FILE=${{ env.NGAGESDK }}/cmake/ngage-toolchain.cmake
+                -DCMAKE_TOOLCHAIN_FILE="${{ steps.ngagesdk.outputs.prefix }}/cmake/ngage-toolchain.cmake"
 
       - name: Build (CMake)
         run: cmake --build build --verbose
