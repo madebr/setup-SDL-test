@@ -11,10 +11,6 @@ jobs:
         shell: bash
     strategy:
       fail-fast: false
-      matrix:
-        platform:
-          - { name: Vita, image: "vitasdk/vitasdk:latest" }
-          - { name: 3DS, image: "devkitpro/devkitarm:latest" }
 
     steps:
       - uses: actions/checkout@v3
