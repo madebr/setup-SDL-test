@@ -40,7 +40,9 @@ jobs:
           version: "2-latest"
           pre-release: false
           build-type: "Release"
-          cmake-toolchain-file: ${{ env.NGAGESDK }}/cmake/ngage-toolchain.cmake
+          ninja: true
+          shell: bash
+          cmake-toolchain-file: ${{ github.workspace }}/ngage-toolchain/cmake/ngage-toolchain.cmake
 
       - name: Configure (CMake)
         run: |
