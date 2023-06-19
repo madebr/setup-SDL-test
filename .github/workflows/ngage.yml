@@ -20,15 +20,16 @@ jobs:
           submodules: true
 
       - name: Setup environment
+        id: ngagesdk
         run: |
-          $Env:NGAGESDK = "$pwd/ngage-toolchain"
-          echo "NGAGESDK=$Env:NGAGESDK" >> $Env:GITHUB_ENV
-          echo "$Env:NGAGESDK/sdk/6.1/Shared/EP0C32/gcc/bin" >> $Env:GITHUB_PATH
+          $ngagesdk = $pwd.replace('\', '/') + "/ngage-toolchain"
+          echo "ngagesdk=$ngagesdk" >> $Env:GITHUB_OUTPUT
+          echo "$ngagesdk/sdk/6.1/Shared/EP0C32/gcc/bin" >> $Env:GITHUB_PATH
 
       - name: Setup toolchain
         run: |
-          cmake -S "$Env:NGAGESDK/setup" `
-                -B "$Env:NGAGESDK/setup/build" `
+          cmake -S "${{ steps.ngagesdk.outputs.prefix }}/setup" `
+                -B "${{ steps.ngagesdk.outputs.prefix }}/setup/build" `
                 -G Ninja      
           cmake --build "$NGAGESDK/setup/build"
 
@@ -38,8 +39,7 @@ jobs:
           pre-release: false
           build-type: "Release"
           ninja: true
-          shell: bash
-          cmake-toolchain-file: ${{ github.workspace }}/ngage-toolchain/cmake/ngage-toolchain.cmake
+          cmake-toolchain-file: '${{ steps.ngagesdk.outputs.prefix }}/cmake/ngage-toolchain.cmake'
 
       - name: Configure (CMake)
         run: |
