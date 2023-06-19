@@ -44,6 +44,12 @@ jobs:
           cmake-toolchain-file: '${{ steps.ngagesdk.outputs.prefix }}/cmake/ngage-toolchain.cmake'
           verbose: true
 
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: true
+
       - name: Configure (CMake)
         run: |
           cmake -S . `
