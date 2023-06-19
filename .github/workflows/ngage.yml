@@ -42,6 +42,7 @@ jobs:
           build-type: "Release"
           ninja: true
           cmake-toolchain-file: '${{ steps.ngagesdk.outputs.prefix }}/cmake/ngage-toolchain.cmake'
+          verbose: true
 
       - name: Configure (CMake)
         run: |
