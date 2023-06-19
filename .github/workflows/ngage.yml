@@ -23,6 +23,7 @@ jobs:
         id: ngagesdk
         run: |
           $ngagesdk = "$pwd".replace('\', '/') + "/ngage-toolchain"
+          echo "NGAGESDK=$ngagesdk" >> $Env:GITHUB_ENV
           echo "prefix=$ngagesdk" >> $Env:GITHUB_OUTPUT
           echo "$ngagesdk/sdk/6.1/Shared/EP0C32/gcc/bin" >> $Env:GITHUB_PATH
 
