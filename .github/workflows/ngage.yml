@@ -6,9 +6,6 @@ jobs:
   build:
     name: Ngage
     runs-on: windows-latest
-    defaults:
-      run:
-        shell: bash
     strategy:
       fail-fast: false
 
@@ -24,14 +21,14 @@ jobs:
 
       - name: Setup environment
         run: |
-          NGAGESDK=$(pwd)/ngage-toolchain
-          echo "NGAGESDK=$NGAGESDK" >> $GITHUB_ENV
-          echo "$NGAGESDK/sdk/6.1/Shared/EP0C32/gcc/bin" >> $GITHUB_PATH
+          $Env:NGAGESDK = "$pwd/ngage-toolchain"
+          echo "NGAGESDK=$Env:NGAGESDK" >> $Env:GITHUB_ENV
+          echo "$Env:NGAGESDK/sdk/6.1/Shared/EP0C32/gcc/bin" >> $Env:GITHUB_PATH
 
       - name: Setup toolchain
         run: |
-          cmake -S "$NGAGESDK/setup" \
-                -B "$NGAGESDK/setup/build" \
+          cmake -S "$Env:NGAGESDK/setup" \
+                -B "$Env:NGAGESDK/setup/build" \
                 -G Ninja      
           cmake --build "$NGAGESDK/setup/build"
 
