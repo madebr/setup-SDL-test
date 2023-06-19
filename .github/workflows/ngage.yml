@@ -27,8 +27,8 @@ jobs:
 
       - name: Setup toolchain
         run: |
-          cmake -S "$Env:NGAGESDK/setup" \
-                -B "$Env:NGAGESDK/setup/build" \
+          cmake -S "$Env:NGAGESDK/setup" `
+                -B "$Env:NGAGESDK/setup/build" `
                 -G Ninja      
           cmake --build "$NGAGESDK/setup/build"
 
@@ -43,9 +43,9 @@ jobs:
 
       - name: Configure (CMake)
         run: |
-          cmake -S . \
-                -B build \
-                -G Ninja \
+          cmake -S . `
+                -B build `
+                -G Ninja `
                 -DCMAKE_TOOLCHAIN_FILE=${{ env.NGAGESDK }}/cmake/ngage-toolchain.cmake
 
       - name: Build (CMake)
