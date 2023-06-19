@@ -1,0 +1,50 @@
+name: Build (Homebrew)
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: ${{ matrix.platform.name }}
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ matrix.platform.image }}
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - { name: Vita, image: "vitasdk/vitasdk:latest" }
+          - { name: 3DS, image: "devkitpro/devkitarm:latest" }
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install build requirements (Vita)
+        if: ${{ matrix.platform.name == 'Vita' }}
+        run: |
+          sudo apk update
+          sudo apk add cmake ninja pkgconf tar nodejs git
+          echo "CMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake" >> $GITHUB_ENV
+
+      - name: Install build requirements (3DS)
+        if: ${{ matrix.platform.name == '3DS' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build git nodejs
+          echo "CMAKE_TOOLCHAIN_FILE=${DEVKITPRO}/cmake/3DS.cmake" >> $GITHUB_ENV
+
+      - uses: madebr/setup-sdl@master
+        with:
+          version: "2-latest"
+          pre-release: false
+          build-type: "Release"
+          cmake-toolchain-file: ${{ env.CMAKE_TOOLCHAIN_FILE }}
+
+      - name: Configure (CMake)
+        run: |
+          cmake -S . -B build -G Ninja
+
+      - name: Build (CMake)
+        run: cmake --build build --verbose
