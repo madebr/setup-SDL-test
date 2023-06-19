@@ -1,0 +1,57 @@
+name: Build (Ngage)
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Ngage
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - { name: Vita, image: "vitasdk/vitasdk:latest" }
+          - { name: 3DS, image: "devkitpro/devkitarm:latest" }
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Checkout ngage-toolchain
+        uses: actions/checkout@v3
+        with:
+          repository: ngagesdk/ngage-toolchain
+          path: ngage-toolchain
+          submodules: true
+
+      - name: Setup environment
+        run: |
+          NGAGESDK=$(pwd)/ngage-toolchain
+          echo "NGAGESDK=$NGAGESDK" >> $GITHUB_ENV
+          echo "$NGAGESDK/sdk/6.1/Shared/EP0C32/gcc/bin" >> $GITHUB_PATH
+
+      - name: Setup toolchain
+        run: |
+          cmake -S "$NGAGESDK/setup" \
+                -B "$NGAGESDK/setup/build" \
+                -G Ninja      
+          cmake --build "$NGAGESDK/setup/build"
+
+      - uses: madebr/setup-sdl@master
+        with:
+          version: "2-latest"
+          pre-release: false
+          build-type: "Release"
+          cmake-toolchain-file: ${{ env.NGAGESDK }}/cmake/ngage-toolchain.cmake
+
+      - name: Configure (CMake)
+        run: |
+          cmake -S . \
+                -B build \
+                -G Ninja \
+                -DCMAKE_TOOLCHAIN_FILE=${{ env.NGAGESDK }}/cmake/ngage-toolchain.cmake
+
+      - name: Build (CMake)
+        run: cmake --build build --verbose
