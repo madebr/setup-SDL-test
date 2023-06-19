@@ -26,25 +26,28 @@ jobs:
         run: |
           sudo apk update
           sudo apk add cmake ninja pkgconf tar nodejs git
-          echo "CMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake" >> $GITHUB_ENV
+          echo "TOOLCHAIN=${VITASDK}/share/vita.toolchain.cmake" >> $GITHUB_ENV
 
       - name: Install build requirements (3DS)
         if: ${{ matrix.platform.name == '3DS' }}
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake ninja-build git nodejs
-          echo "CMAKE_TOOLCHAIN_FILE=${DEVKITPRO}/cmake/3DS.cmake" >> $GITHUB_ENV
+          echo "TOOLCHAIN=${DEVKITPRO}/cmake/3DS.cmake" >> $GITHUB_ENV
 
       - uses: madebr/setup-sdl@master
         with:
           version: "2-latest"
           pre-release: false
           build-type: "Release"
-          cmake-toolchain-file: ${{ env.CMAKE_TOOLCHAIN_FILE }}
+          cmake-toolchain-file: ${{ env.TOOLCHAIN }}
 
       - name: Configure (CMake)
         run: |
-          cmake -S . -B build -G Ninja
+          cmake -S . \
+                -B build \
+                -G Ninja \
+                -DCMAKE_TOOLCHAIN_FILE=${{ env.TOOLCHAIN }}
 
       - name: Build (CMake)
         run: cmake --build build --verbose
