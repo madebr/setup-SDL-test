@@ -35,6 +35,7 @@ jobs:
           cmake --build "${{ steps.ngagesdk.outputs.prefix }}/setup/build"
 
       - uses: madebr/setup-sdl@master
+        timeout-minutes: 1  # FIXME
         with:
           version: "2-latest"
           pre-release: false
