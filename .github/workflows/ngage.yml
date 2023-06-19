@@ -25,7 +25,10 @@ jobs:
           $ngagesdk = "$pwd".replace('\', '/') + "/ngage-toolchain"
           echo "NGAGESDK=$ngagesdk" >> $Env:GITHUB_ENV
           echo "prefix=$ngagesdk" >> $Env:GITHUB_OUTPUT
-          echo "$ngagesdk/sdk/6.1/Shared/EP0C32/gcc/bin" >> $Env:GITHUB_PATH
+
+          $original_path = Get-Content $Env:GITHUB_PATH
+          $new_path = "$ngagesdk/sdk/6.1/Shared/EP0C32/gcc/bin`n" + $original_path
+          Out-File -FilePath $Env:GITHUB_PATH -InputObject $new_path
 
       - name: Setup toolchain
         run: |
@@ -35,7 +38,7 @@ jobs:
           cmake --build "${{ steps.ngagesdk.outputs.prefix }}/setup/build"
 
       - uses: madebr/setup-sdl@master
-        timeout-minutes: 1  # FIXME
+        timeout-minutes: 8
         with:
           version: "2-latest"
           pre-release: false
@@ -43,12 +46,6 @@ jobs:
           ninja: true
           cmake-toolchain-file: '${{ steps.ngagesdk.outputs.prefix }}/cmake/ngage-toolchain.cmake'
           verbose: true
-
-      - name: Setup tmate session
-        if: ${{ failure() }}
-        uses: mxschmitt/action-tmate@v3
-        with:
-          limit-access-to-actor: true
 
       - name: Configure (CMake)
         run: |
