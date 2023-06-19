@@ -26,8 +26,7 @@ jobs:
           import os
           import pathlib
           
-          ngagesdk_str = str(pathlib.Path.cwd() / "ngage-toolchain").replace("\\", "/")
-          ngagesdk = "$pwd".replace('\', '/') + "/ngage-toolchain"
+          ngagesdk = str(pathlib.Path.cwd() / "ngage-toolchain").replace("\\", "/")
           
           print(f"ngagesdk={ngagesdk}")
           
