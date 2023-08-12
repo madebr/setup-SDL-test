@@ -52,6 +52,7 @@ jobs:
         cmake-arguments: ${{ matrix.platform.cmake-arguments }}
         cmake-toolchain-file: ${{ matrix.platform.cmake-toolchain-file }}
         install-linux-dependencies: true
+        sdl-test: true
     - name: Configure (CMake)
       run: |
         cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=${{ matrix.platform.cmake-toolchain-file }}
@@ -85,6 +86,7 @@ jobs:
           version: sdl3-head
           shell: ${{ matrix.platform.shell }}
           install-linux-dependencies: true
+          sdl-test: true
       - name: Configure (CMake)
         run: |
           cmake -S . -B build
