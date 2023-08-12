@@ -66,16 +66,18 @@ jobs:
     container:
       image: ${{ matrix.platform.docker }}
 
-    defaults:
-      run:
-        shell: ${{ matrix.platform.shell }}
-
     strategy:
       fail-fast: false
       matrix:
         platform:
-          - { name: 'Fedora (docker)',  shell: 'bash', docker: 'fedora:rawhide',  prepare: 'sudo dnf install -y gcc g++ cmake'}
-          - { name: 'Ubuntu (docker)',  shell: 'bash', docker: 'ubuntu:23.04',    prepare: 'apt-get update -y && apt-get install -y build-essential cmake'}
+          - { name: 'Fedora (docker)', docker: 'fedora:rawhide',  linux: true,
+              prepare: 'sudo dnf install -y gcc g++ cmake' }
+          - { name: 'Ubuntu (docker)', docker: 'ubuntu:23.04',    linux: true,
+              prepare: 'apt-get update -y && apt-get install -y build-essential cmake' }
+          - { name: 'Vita',            docker: 'vitasdk/vitasdk:latest',      cmake-toolchain-file: '/usr/local/vitasdk/share/vita.toolchain.cmake',
+              prepare: 'apk update && apk add cmake ninja pkgconf tar nodejs git' } # cmake-toolchain-file: ${{ env.VITASDK }}/share/vita.toolchain.cmake',
+          - { name: '3DS',             docker: 'devkitpro/devkitarm:latest',  cmake-toolchain-file: '/opt/devkitpro/cmake/3DS.cmake',
+              prepare: 'sudo apt-get update && sudo apt-get install -y cmake ninja-build git nodejs' } # cmake-toolchain-file: '${{ env.DEVKITPRO }}/cmake/3DS.cmake',
     steps:
       - run: |
           ${{ matrix.platform.prepare }}
@@ -84,12 +86,12 @@ jobs:
         uses: madebr/setup-sdl@main
         with:
           version: sdl3-head
-          shell: ${{ matrix.platform.shell }}
-          install-linux-dependencies: true
+          cmake-toolchain-file: ${{ matrix.platform.cmake-toolchain-file }}
+          install-linux-dependencies: ${{ !!matrix.platform.linux }}
           sdl-test: true
       - name: Configure (CMake)
         run: |
-          cmake -S . -B build
+          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=${{ matrix.platform.cmake-toolchain-file }}
       - name: Build (CMake)
         run: |
           cmake --build build
