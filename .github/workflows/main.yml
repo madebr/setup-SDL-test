@@ -48,6 +48,9 @@ jobs:
       uses: madebr/setup-sdl@main
       with:
         version: 3-head
+        sdl-image: 3-head
+        sdl-mixer: 3-head
+        sdl-net: 3-head
         shell: ${{ matrix.platform.shell }}
         cmake-arguments: ${{ matrix.platform.cmake-arguments }}
         cmake-toolchain-file: ${{ matrix.platform.cmake-toolchain-file }}
