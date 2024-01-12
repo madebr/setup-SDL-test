@@ -77,10 +77,16 @@ jobs:
               prepare: 'sudo dnf install -y gcc g++ cmake' }
           - { name: 'Ubuntu (docker)', docker: 'ubuntu:23.04',    linux: true,
               prepare: 'apt-get update -y && apt-get install -y build-essential cmake' }
-          - { name: 'Vita',            docker: 'vitasdk/vitasdk:latest',      cmake-toolchain-file: '/usr/local/vitasdk/share/vita.toolchain.cmake',
+          - { name: 'vita',            docker: 'vitasdk/vitasdk:latest',      cmake-toolchain-file: '/usr/local/vitasdk/share/vita.toolchain.cmake',
               prepare: 'apk update && apk add cmake ninja pkgconf tar nodejs git' } # cmake-toolchain-file: ${{ env.VITASDK }}/share/vita.toolchain.cmake',
-          - { name: '3DS',             docker: 'devkitpro/devkitarm:latest',  cmake-toolchain-file: '/opt/devkitpro/cmake/3DS.cmake',
+          - { name: 'n3ds',            docker: 'devkitpro/devkitarm:latest',  cmake-toolchain-file: '/opt/devkitpro/cmake/3DS.cmake',
               prepare: 'sudo apt-get update && sudo apt-get install -y cmake ninja-build git nodejs' } # cmake-toolchain-file: '${{ env.DEVKITPRO }}/cmake/3DS.cmake',
+          - { name: 'ps2',             docker: 'ps2dev/ps2dev:latest',        cmake-toolchain-file: '/usr/local/ps2dev/ps2sdk/ps2dev.cmake',
+              prepare: 'apk update && apk add cmake gmp mpc1 mpfr4 ninja pkgconf make tar nodejs git' } # cmake-toolchain-file: '${{ env.PS2DEV }}/ps2sdk/ps2dev.cmake',
+          - { name: 'psp',             docker: 'pspdev/pspdev:latest',        cmake-toolchain-file: '/usr/local/pspdev/psp/share/pspdev.cmake',
+              prepare: 'apk update && apk add cmake gmp mpc1 mpfr4 ninja pkgconf make tar nodejs git' } # cmake-toolchain-file: '${{ env.PSPDEV }}/psp/share/pspdev.cmake',
+          - { name: 'haiku',           docker: 'pspdev/pspdev:latest',        cmake-toolchain: 'cmake/haiku.cmake',
+              prepare: 'apt-get install pkg-config -y ninja-build tar nodejs git' }
     steps:
       - run: |
           ${{ matrix.platform.prepare }}
