@@ -86,7 +86,7 @@ jobs:
           ${{ matrix.platform.prepare }}
       - uses: actions/checkout@v3
       - name: Set up SDL
-        uses: madebr/setup-sdl@main
+        uses: madebr/setup-sdl@sdl-satellites
         with:
           version: sdl3-head
           cmake-toolchain-file: ${{ matrix.platform.cmake-toolchain-file }}
