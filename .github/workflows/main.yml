@@ -48,9 +48,9 @@ jobs:
       uses: madebr/setup-sdl@sdl-satellites
       with:
         version: 3-head
-        sdl-image: 3-head
-        sdl-mixer: 3-head
-        sdl-net: 3-head
+        version-sdl-image: 3-head
+        version-sdl-mixer: 3-head
+        version-sdl-net: 3-head
         shell: ${{ matrix.platform.shell }}
         cmake-arguments: ${{ matrix.platform.cmake-arguments }}
         cmake-toolchain-file: ${{ matrix.platform.cmake-toolchain-file }}
@@ -89,9 +89,9 @@ jobs:
         uses: madebr/setup-sdl@sdl-satellites
         with:
           version: sdl3-head
-          sdl-image: 3-head
-          sdl-mixer: 3-head
-          sdl-net: 3-head
+          version-sdl-image: 3-head
+          version-sdl-mixer: 3-head
+          version-sdl-net: 3-head
           cmake-toolchain-file: ${{ matrix.platform.cmake-toolchain-file }}
           install-linux-dependencies: ${{ !!matrix.platform.linux }}
           sdl-test: true
