@@ -45,7 +45,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Set up SDL
       id: sdl
-      uses: madebr/setup-sdl@main
+      uses: madebr/setup-sdl@sdl-satellites
       with:
         version: 3-head
         sdl-image: 3-head
@@ -89,6 +89,9 @@ jobs:
         uses: madebr/setup-sdl@sdl-satellites
         with:
           version: sdl3-head
+          sdl-image: 3-head
+          sdl-mixer: 3-head
+          sdl-net: 3-head
           cmake-toolchain-file: ${{ matrix.platform.cmake-toolchain-file }}
           install-linux-dependencies: ${{ !!matrix.platform.linux }}
           sdl-test: true
