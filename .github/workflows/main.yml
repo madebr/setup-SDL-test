@@ -86,7 +86,7 @@ jobs:
           - { name: 'psp',             docker: 'pspdev/pspdev:latest',                cmake-toolchain-file: '/usr/local/pspdev/psp/share/pspdev.cmake',
               prepare: 'apk update && apk add cmake gmp mpc1 mpfr4 ninja pkgconf make tar nodejs git' } # cmake-toolchain-file: '${{ env.PSPDEV }}/psp/share/pspdev.cmake',
           - { name: 'haiku',           docker: 'haiku/cross-compiler:x86_64-r1beta4', cmake-toolchain-file: 'cmake/haiku.cmake',
-              prepare: 'apt-get install pkg-config -y ninja-build tar nodejs git' }
+              prepare: 'apt-get update && apt-get install pkg-config -y ninja-build tar nodejs git' }
     steps:
       - run: |
           ${{ matrix.platform.prepare }}
