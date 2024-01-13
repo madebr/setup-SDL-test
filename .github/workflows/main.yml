@@ -51,6 +51,8 @@ jobs:
         version-sdl-image: 3-head
         version-sdl-mixer: 3-head
         version-sdl-net: 3-head
+        version-sdl-rtf: 3-head
+        version-sdl-ttf: 3-head
         shell: ${{ matrix.platform.shell }}
         cmake-arguments: ${{ matrix.platform.cmake-arguments }}
         cmake-toolchain-file: ${{ matrix.platform.cmake-toolchain-file }}
@@ -98,6 +100,8 @@ jobs:
           version-sdl-image: 3-head
           version-sdl-mixer: 3-head
           version-sdl-net: 3-head
+          version-sdl-rtf: 3-head
+          version-sdl-ttf: 3-head
           cmake-arguments: -DSDL3MIXER_DEPS_SHARED=OFF -DSDL3IMAGE_DEPS_SHARED=OFF
           cmake-toolchain-file: ${{ matrix.platform.cmake-toolchain-file }}
           install-linux-dependencies: ${{ !!matrix.platform.linux }}
