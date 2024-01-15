@@ -1,11 +1,11 @@
-#include <SDL3/SDL.h>
-#include <SDL3/SDL_test.h>
-#include <SDL3_image/SDL_image.h>
-#include <SDL3_mixer/SDL_mixer.h>
-#include <SDL3_ttf/SDL_ttf.h>
-#include <SDL3_rtf/SDL_rtf.h>
+#include "SDL.h"
+#include "SDL_test.h"
+#include "SDL_image.h"
+#include "SDL_mixer.h"
+#include "SDL_ttf.h"
+#include "SDL_rtf.h"
 #ifdef WITH_SDLNET
-#include <SDL3_net/SDL_net.h>
+#include "SDL_net.h"
 #endif
 
 #define LOG_SDL_VERSION(WHAT, COMPILED_CBFN, LINKED_CBFN)                       \
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
     LOG_SDL_VERSION_RET("SDL_ttf", SDL_TTF_VERSION, TTF_Linked_Version);
     LOG_SDL_VERSION_RET("SDL_rtf", SDL_RTF_VERSION, RTF_Linked_Version);
 #ifdef WITH_SDLNET
-    LOG_SDL_VERSION_RET("SDL_net", SDL_NET_VERSION, SDLNet_LinkedVersion);
+    LOG_SDL_VERSION_RET("SDL_net", SDL_NET_VERSION, SDLNet_Linked_Version);
 #endif
 
     /* Initialize test framework */
@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
         int finished = 0;
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_EVENT_QUIT) {
+            if (event.type == SDL_QUIT) {
                 finished = 1;
                 break;
             }
