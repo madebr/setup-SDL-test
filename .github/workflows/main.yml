@@ -81,7 +81,7 @@ jobs:
               prepare: 'apt-get update -y && apt-get install -y build-essential cmake' }
           - { name: 'vita',            docker: 'vitasdk/vitasdk:latest',              cmake-toolchain-file: '/usr/local/vitasdk/share/vita.toolchain.cmake',                  vendored: true,
               prepare: 'apk update && apk add cmake ninja pkgconf tar nodejs git' } # cmake-toolchain-file: ${{ env.VITASDK }}/share/vita.toolchain.cmake',
-          - { name: 'n3ds',            docker: 'devkitpro/devkitarm:latest',          cmake-toolchain-file: '/opt/devkitpro/cmake/3DS.cmake',                                 vendored: true,
+          - { name: 'n3ds',            docker: 'devkitpro/devkitarm:latest',          cmake-toolchain-file: '/opt/devkitpro/cmake/3DS.cmake',                                 vendored: true, args: `-DN3DS=ON`
               prepare: 'sudo apt-get update && sudo apt-get install -y cmake ninja-build git nodejs' } # cmake-toolchain-file: '${{ env.DEVKITPRO }}/cmake/3DS.cmake',
           - { name: 'ps2',             docker: 'ps2dev/ps2dev:latest',                cmake-toolchain-file: '/usr/local/ps2dev/ps2sdk/ps2dev.cmake',                          vendored: true,
               prepare: 'apk update && apk add cmake gmp mpc1 mpfr4 ninja pkgconf make tar nodejs git' } # cmake-toolchain-file: '${{ env.PS2DEV }}/ps2sdk/ps2dev.cmake',
@@ -102,7 +102,7 @@ jobs:
           version-sdl-net: 3-head
           version-sdl-rtf: 3-head
           version-sdl-ttf: 3-head
-          cmake-arguments: ${{ matrix.platform.vendored && '-DSDL2IMAGE_VENDORED=TRUE -DSDL3IMAGE_VENDORED=TRUE -DSDL2MIXER_VENDORED=TRUE -DSDL3MIXER_VENDORED=TRUE -DSDL2TTF_VENDORED=TRUE -DSDL3TTF_VENDORED=TRUE' }}
+          cmake-arguments: '${{ matrix.platform.vendored && '-DSDL2IMAGE_VENDORED=TRUE -DSDL3IMAGE_VENDORED=TRUE -DSDL2MIXER_VENDORED=TRUE -DSDL3MIXER_VENDORED=TRUE -DSDL2TTF_VENDORED=TRUE -DSDL3TTF_VENDORED=TRUE' }} ${{ matrix.platform.args }}
           cmake-toolchain-file: ${{ matrix.platform.cmake-toolchain-file }}
           install-linux-dependencies: ${{ !!matrix.platform.linux }}
           sdl-test: true
