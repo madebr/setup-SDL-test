@@ -99,7 +99,7 @@ jobs:
           version: sdl3-head
           version-sdl-image: 3-head
           version-sdl-mixer: 3-head
-          version-sdl-net: ${{ !matrix.platform.no-sdl-net && '3-head' }}
+          version-sdl-net: ${{ (!matrix.platform.no-sdl-net && '3-head') || '' }}
           version-sdl-rtf: 3-head
           version-sdl-ttf: 3-head
           cmake-arguments: ${{ matrix.platform.vendored && '-DSDL2IMAGE_VENDORED=TRUE -DSDL3IMAGE_VENDORED=TRUE -DSDL2MIXER_VENDORED=TRUE -DSDL3MIXER_VENDORED=TRUE -DSDL2TTF_VENDORED=TRUE -DSDL3TTF_VENDORED=TRUE' }} ${{ matrix.platform.args }}
