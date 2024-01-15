@@ -23,5 +23,6 @@ target_link_libraries(main PRIVATE
     SDL2_rtf::SDL2_rtf
     SDL2_ttf::SDL2_ttf
     SDL2::SDL2test
+    SDL2::SDL2main
     SDL2::SDL2
 )
