@@ -1,11 +1,49 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_test.h>
+#include <SDL3_image/SDL_image.h>
+#include <SDL3_mixer/SDL_mixer.h>
+#include <SDL3_ttf/SDL_ttf.h>
+#include <SDL3_rtf/SDL_rtf.h>
+#include <SDL3_net/SDL_net.h>
+
+#define LOG_SDL_VERSION(WHAT, COMPILED_CBFN, LINKED_CBFN)                       \
+    do {                                                                        \
+        SDL_version compiled_;                                                  \
+        SDL_version linked_;                                                    \
+        COMPILED_CBFN(&compiled_)                                               \
+        LINKED_CBFN(&linked_);                                                  \
+        LOG_CV_LV(WHAT, &compiled_, &linked_);                                  \
+    } while (0)
+
+#define LOG_SDL_VERSION_RET(WHAT, COMPILED_CBFN, LINKED_CBFN)                   \
+    do {                                                                        \
+        SDL_version compiled_;                                                  \
+        const SDL_version *linked_;                                             \
+        COMPILED_CBFN(&compiled_)                                               \
+        linked_ = LINKED_CBFN();                                                \
+        LOG_CV_LV(WHAT, &compiled_, linked_);                                   \
+    } while (0)
+
+#define LOG_CV_LV(WHAT, CV, LV)                                                 \
+    do {                                                                        \
+        SDL_Log(WHAT ": compiled version: %d.%d.%d, linked version: %d.%d.%d",  \
+            (CV)->major, (CV)->minor, (CV)->patch,                              \
+            (LV)->major, (LV)->minor, (LV)->patch);                             \
+                                                                                \
+    } while (0)
 
 int main(int argc, char *argv[]) {
     int i;
     SDLTest_CommonState *state;
     SDL_Window *window;
     SDL_Renderer *renderer;
+
+    LOG_SDL_VERSION("SDL", SDL_VERSION, SDL_GetVersion);
+    LOG_SDL_VERSION_RET("SDL_image", SDL_IMAGE_VERSION, IMG_Linked_Version);
+    LOG_SDL_VERSION_RET("SDL_mixer", SDL_MIXER_VERSION, Mix_Linked_Version);
+    LOG_SDL_VERSION_RET("SDL_ttf", SDL_TTF_VERSION, TTF_Linked_Version);
+    LOG_SDL_VERSION_RET("SDL_rtf", SDL_RTF_VERSION, RTF_Linked_Version);
+    LOG_SDL_VERSION_RET("SDL_net", SDL_NET_VERSION, SDLNet_LinkedVersion);
 
     /* Initialize test framework */
     state = SDLTest_CommonCreateState(argv, SDL_INIT_EVERYTHING);
@@ -39,7 +77,9 @@ int main(int argc, char *argv[]) {
     window = state->windows[0];
     renderer = state->renderers[0];
 
-    SDL_SetWindowTitle(window, "SDL issue");
+    IMG_Init(0);
+    TTF_Init();
+    SDLNet_Init();
 
     while (1) {
         int finished = 0;

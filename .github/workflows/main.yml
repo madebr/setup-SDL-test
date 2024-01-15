@@ -79,13 +79,13 @@ jobs:
               prepare: 'sudo dnf install -y gcc g++ cmake' }
           - { name: 'Ubuntu (docker)', docker: 'ubuntu:23.04',    linux: true,
               prepare: 'apt-get update -y && apt-get install -y build-essential cmake' }
-          - { name: 'vita',            docker: 'vitasdk/vitasdk:latest',              cmake-toolchain-file: '/usr/local/vitasdk/share/vita.toolchain.cmake',                  vendored: true,
+          - { name: 'vita',            docker: 'vitasdk/vitasdk:latest',              cmake-toolchain-file: '/usr/local/vitasdk/share/vita.toolchain.cmake',                  vendored: true, no-sdl-net: true,
               prepare: 'apk update && apk add cmake ninja pkgconf tar nodejs git' } # cmake-toolchain-file: ${{ env.VITASDK }}/share/vita.toolchain.cmake',
-          - { name: 'n3ds',            docker: 'devkitpro/devkitarm:latest',          cmake-toolchain-file: '/opt/devkitpro/cmake/3DS.cmake',                                 vendored: true, args: '-DN3DS=ON',
+          - { name: 'n3ds',            docker: 'devkitpro/devkitarm:latest',          cmake-toolchain-file: '/opt/devkitpro/cmake/3DS.cmake',                                 vendored: true, no-sdl-net: true, args: '-DN3DS=ON',
               prepare: 'sudo apt-get update && sudo apt-get install -y cmake ninja-build git nodejs' } # cmake-toolchain-file: '${{ env.DEVKITPRO }}/cmake/3DS.cmake',
-          - { name: 'ps2',             docker: 'ps2dev/ps2dev:latest',                cmake-toolchain-file: '/usr/local/ps2dev/ps2sdk/ps2dev.cmake',                          vendored: true,
+          - { name: 'ps2',             docker: 'ps2dev/ps2dev:latest',                cmake-toolchain-file: '/usr/local/ps2dev/ps2sdk/ps2dev.cmake',                          vendored: true, no-sdl-net: true,
               prepare: 'apk update && apk add cmake gmp mpc1 mpfr4 ninja pkgconf make tar nodejs git' } # cmake-toolchain-file: '${{ env.PS2DEV }}/ps2sdk/ps2dev.cmake',
-          - { name: 'psp',             docker: 'pspdev/pspdev:latest',                cmake-toolchain-file: '/usr/local/pspdev/psp/share/pspdev.cmake',                       vendored: true,
+          - { name: 'psp',             docker: 'pspdev/pspdev:latest',                cmake-toolchain-file: '/usr/local/pspdev/psp/share/pspdev.cmake',                       vendored: true, no-sdl-net: true,
               prepare: 'apk update && apk add cmake gmp mpc1 mpfr4 ninja pkgconf make tar nodejs git' } # cmake-toolchain-file: '${{ env.PSPDEV }}/psp/share/pspdev.cmake',
           - { name: 'haiku',           docker: 'haiku/cross-compiler:x86_64-r1beta4', cmake-toolchain-file: 'cmake/haiku.cmake',                                              vendored: true,
               prepare: 'apt-get update && apt-get install pkg-config -y ninja-build tar nodejs git' }
@@ -99,7 +99,7 @@ jobs:
           version: sdl3-head
           version-sdl-image: 3-head
           version-sdl-mixer: 3-head
-          version-sdl-net: 3-head
+          version-sdl-net: ${{ !matrix.platform.no-sdl-net && '3-head' }}
           version-sdl-rtf: 3-head
           version-sdl-ttf: 3-head
           cmake-arguments: ${{ matrix.platform.vendored && '-DSDL2IMAGE_VENDORED=TRUE -DSDL3IMAGE_VENDORED=TRUE -DSDL2MIXER_VENDORED=TRUE -DSDL3MIXER_VENDORED=TRUE -DSDL2TTF_VENDORED=TRUE -DSDL3TTF_VENDORED=TRUE' }} ${{ matrix.platform.args }}
@@ -108,7 +108,7 @@ jobs:
           sdl-test: true
       - name: Configure (CMake)
         run: |
-          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=${{ matrix.platform.cmake-toolchain-file }}
+          cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=${{ matrix.platform.cmake-toolchain-file }} -DSDLNET_AVAIlABLE=${{ !matrix.platform.no-sdl-net}}
       - name: Build (CMake)
         run: |
           cmake --build build
