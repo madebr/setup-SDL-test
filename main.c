@@ -4,7 +4,9 @@
 #include <SDL3_mixer/SDL_mixer.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3_rtf/SDL_rtf.h>
+#ifdef WITH_SDLNET
 #include <SDL3_net/SDL_net.h>
+#endif
 
 #define LOG_SDL_VERSION(WHAT, COMPILED_CBFN, LINKED_CBFN)                       \
     do {                                                                        \
@@ -43,7 +45,9 @@ int main(int argc, char *argv[]) {
     LOG_SDL_VERSION_RET("SDL_mixer", SDL_MIXER_VERSION, Mix_Linked_Version);
     LOG_SDL_VERSION_RET("SDL_ttf", SDL_TTF_VERSION, TTF_Linked_Version);
     LOG_SDL_VERSION_RET("SDL_rtf", SDL_RTF_VERSION, RTF_Linked_Version);
+#ifdef WITH_SDLNET
     LOG_SDL_VERSION_RET("SDL_net", SDL_NET_VERSION, SDLNet_LinkedVersion);
+#endif
 
     /* Initialize test framework */
     state = SDLTest_CommonCreateState(argv, SDL_INIT_EVERYTHING);
@@ -79,7 +83,9 @@ int main(int argc, char *argv[]) {
 
     IMG_Init(0);
     TTF_Init();
+#ifdef WITH_SDLNET
     SDLNet_Init();
+#endif
 
     while (1) {
         int finished = 0;

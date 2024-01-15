@@ -16,6 +16,7 @@ add_executable(main main.c)
 if(SDLNET_AVAIlABLE)
     target_link_libraries(main PRIVATE SDL3_net::SDL3_net)
 endif()
+target_compile_definitions(main PRIVATE $<$<BOOL:${SDLNET_AVAIlABLE}>:WITH_SDLNET>)
 target_link_libraries(main PRIVATE
     SDL3_image::SDL3_image
     SDL3_mixer::SDL3_mixer
