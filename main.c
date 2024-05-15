@@ -8,30 +8,18 @@
 #include <SDL3_net/SDL_net.h>
 #endif
 
-#define LOG_SDL_VERSION(WHAT, COMPILED_CBFN, LINKED_CBFN)                       \
+#define LOG_SDL_VERSION(WHAT, COMPILED_VERSION, LINKED_CBFN)                    \
     do {                                                                        \
-        SDL_version compiled_;                                                  \
-        SDL_version linked_;                                                    \
-        COMPILED_CBFN(&compiled_)                                               \
-        LINKED_CBFN(&linked_);                                                  \
-        LOG_CV_LV(WHAT, &compiled_, &linked_);                                  \
+        int compiled_version = COMPILED_VERSION;                                \
+        int linked_version = LINKED_CBFN();                                     \
+        LOG_CV_LV(WHAT, compiled_version, linked_version);                      \
     } while (0)
 
-#define LOG_SDL_VERSION_RET(WHAT, COMPILED_CBFN, LINKED_CBFN)                   \
-    do {                                                                        \
-        SDL_version compiled_;                                                  \
-        const SDL_version *linked_;                                             \
-        COMPILED_CBFN(&compiled_)                                               \
-        linked_ = LINKED_CBFN();                                                \
-        LOG_CV_LV(WHAT, &compiled_, linked_);                                   \
-    } while (0)
-
-#define LOG_CV_LV(WHAT, CV, LV)                                                 \
-    do {                                                                        \
-        SDL_Log(WHAT ": compiled version: %d.%d.%d, linked version: %d.%d.%d",  \
-            (CV)->major, (CV)->minor, (CV)->patch,                              \
-            (LV)->major, (LV)->minor, (LV)->patch);                             \
-                                                                                \
+#define LOG_CV_LV(WHAT, CV, LV)                                                             \
+    do {                                                                                    \
+        SDL_Log(WHAT ": compiled version: %d.%d.%d, linked version: %d.%d.%d",              \
+            SDL_VERSIONNUM_MAJOR(CV), SDL_VERSIONNUM_MINOR(CV), SDL_VERSIONNUM_MICRO(CV),   \
+            SDL_VERSIONNUM_MAJOR(LV), SDL_VERSIONNUM_MINOR(LV), SDL_VERSIONNUM_MICRO(LV));  \
     } while (0)
 
 int main(int argc, char *argv[]) {
@@ -40,17 +28,19 @@ int main(int argc, char *argv[]) {
     SDL_Window *window;
     SDL_Renderer *renderer;
 
+    int vv = IMG_Version();
+
     LOG_SDL_VERSION("SDL", SDL_VERSION, SDL_GetVersion);
-    LOG_SDL_VERSION_RET("SDL_image", SDL_IMAGE_VERSION, IMG_Linked_Version);
-    LOG_SDL_VERSION_RET("SDL_mixer", SDL_MIXER_VERSION, Mix_Linked_Version);
-    LOG_SDL_VERSION_RET("SDL_ttf", SDL_TTF_VERSION, TTF_Linked_Version);
-    LOG_SDL_VERSION_RET("SDL_rtf", SDL_RTF_VERSION, RTF_Linked_Version);
+    LOG_SDL_VERSION("SDL_image", SDL_IMAGE_VERSION, IMG_Version);
+    LOG_SDL_VERSION("SDL_mixer", SDL_MIXER_VERSION, Mix_Version);
+    LOG_SDL_VERSION("SDL_ttf", SDL_TTF_VERSION, TTF_Version);
+    LOG_SDL_VERSION("SDL_rtf", SDL_RTF_VERSION, RTF_Version);
 #ifdef WITH_SDLNET
-    LOG_SDL_VERSION_RET("SDL_net", SDL_NET_VERSION, SDLNet_LinkedVersion);
+    LOG_SDL_VERSION("SDL_net", SDL_NET_VERSION, SDLNet_Version);
 #endif
 
     /* Initialize test framework */
-    state = SDLTest_CommonCreateState(argv, SDL_INIT_EVERYTHING);
+    state = SDLTest_CommonCreateState(argv, SDL_INIT_EVENTS | SDL_INIT_VIDEO);
     if (state == NULL) {
         return 1;
     }
