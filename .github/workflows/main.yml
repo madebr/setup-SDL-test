@@ -42,7 +42,7 @@ jobs:
       run: |
         sudo apt-get update -y
         sudo apt-get install ${{ matrix.platform.apt-packages }}
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up SDL
       id: sdl
       uses: libsdl-org/setup-sdl@main
@@ -92,7 +92,7 @@ jobs:
     steps:
       - run: |
           ${{ matrix.platform.prepare }}
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up SDL
         uses: libsdl-org/setup-sdl@main
         with:
