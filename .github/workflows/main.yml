@@ -23,6 +23,7 @@ jobs:
         - { name: 'linux: MinGW',           os: 'ubuntu-latest',    shell: 'bash',        cmake-toolchain-file: 'cmake/mingw64.cmake', apt-packages: 'mingw-w64'}
         - { name: 'macos: default',         os: 'macos-latest',     shell: 'sh', }
     steps:
+    - uses: actions/checkout@v4
     - uses: ilammy/msvc-dev-cmd@v1
       if: ${{ matrix.platform.msvc }}
       with:
@@ -45,7 +46,6 @@ jobs:
       run: |
         sudo apt-get update -y
         sudo apt-get install ${{ matrix.platform.apt-packages }}
-    - uses: actions/checkout@v4
     - name: Set up SDL
       id: sdl
       uses: libsdl-org/setup-sdl@main
