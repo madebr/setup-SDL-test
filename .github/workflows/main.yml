@@ -77,7 +77,7 @@ jobs:
         platform:
           - { name: 'Fedora (docker)', docker: 'fedora:rawhide',  linux: true,
               prepare: 'sudo dnf install -y gcc g++ cmake' }
-          - { name: 'Ubuntu (docker)', docker: 'ubuntu:23.04',    linux: true,
+          - { name: 'Ubuntu (docker)', docker: 'ubuntu:24.10',    linux: true,
               prepare: 'apt-get update -y && apt-get install -y build-essential cmake' }
           - { name: 'vita',            docker: 'vitasdk/vitasdk:latest',              cmake-toolchain-file: '/usr/local/vitasdk/share/vita.toolchain.cmake',                  vendored: true, no-sdl-net: true,
               prepare: 'apk update && apk add cmake ninja pkgconf tar nodejs git' } # cmake-toolchain-file: ${{ env.VITASDK }}/share/vita.toolchain.cmake',

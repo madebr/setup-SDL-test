@@ -71,7 +71,6 @@ int main(int argc, char *argv[]) {
     window = state->windows[0];
     renderer = state->renderers[0];
 
-    IMG_Init(0);
     TTF_Init();
 #ifdef WITH_SDLNET
     SDLNet_Init();
