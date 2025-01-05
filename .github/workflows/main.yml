@@ -102,7 +102,7 @@ jobs:
           version-sdl-net: ${{ (!matrix.platform.no-sdl-net && '3-head') || '' }}
           version-sdl-rtf: 3-head
           version-sdl-ttf: 3-head
-          cmake-arguments: ${{ matrix.platform.vendored && '-DSDL2IMAGE_VENDORED=TRUE -DSDLIMAGE_VENDORED=TRUE -DSDL2MIXER_VENDORED=TRUE -DSDLMIXER_VENDORED=TRUE -DSDL2TTF_VENDORED=TRUE -DSDLTTF_VENDORED=TRUE -DSDLIMAGE_AVIF=OFF' }} ${{ matrix.platform.args }}
+          cmake-arguments: ${{ matrix.platform.vendored && '-DSDL2IMAGE_VENDORED=TRUE -DSDLIMAGE_VENDORED=TRUE -DSDL2MIXER_VENDORED=TRUE -DSDLMIXER_VENDORED=TRUE -DSDL2TTF_VENDORED=TRUE -DSDLTTF_VENDORED=TRUE -DSDLIMAGE_AVIF=OFF -DSDLIMAGE_WEBP=OFF' }} ${{ matrix.platform.args }}
           cmake-toolchain-file: ${{ matrix.platform.cmake-toolchain-file }}
           install-linux-dependencies: ${{ !!matrix.platform.linux }}
           sdl-test: true
