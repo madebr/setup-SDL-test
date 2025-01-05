@@ -19,7 +19,7 @@ jobs:
         - { name: 'windows: clang64',       os: 'windows-latest',   shell: 'msys2 {0}',   msys2: true,  msystem: 'clang64', msys-env: 'mingw-w64-clang-x86_64' }
         - { name: 'windows: ucrt64',        os: 'windows-latest',   shell: 'msys2 {0}',   msys2: true,  msystem: 'ucrt64',  msys-env: 'mingw-w64-ucrt-x86_64'}
         - { name: 'windows: MSVC (vcvars)', os: 'windows-latest',   shell: 'pwsh',        msvc: true,   msvc_arch: x64 }
-        - { name: 'windows: MSVC (args)',   os: 'windows-latest',   shell: 'pwsh',        msvc: false,  cmake-arguments: '-A Win32'}
+        - { name: 'windows: MSVC (args)',   os: 'windows-latest',   shell: 'pwsh',        msvc: false,  msvc_arch: Win32 } #cmake-arguments: '-A Win32'}
         - { name: 'linux: MinGW',           os: 'ubuntu-latest',    shell: 'bash',        cmake-toolchain-file: 'cmake/mingw64.cmake', apt-packages: 'mingw-w64'}
         - { name: 'macos: default',         os: 'macos-latest',     shell: 'sh', }
     steps:
@@ -27,6 +27,9 @@ jobs:
       if: ${{ matrix.platform.msvc }}
       with:
         arch: ${{ matrix.platform.msvc_arch }}
+    - name: Set up ninja
+      if: ${{ !matrix.platform.msystem }}
+      uses: ./.github/actions/setup-ninja
     - name: Set up MSYS2
       if: ${{ matrix.platform.msys2 }}
       uses: msys2/setup-msys2@v2
@@ -56,11 +59,12 @@ jobs:
         shell: ${{ matrix.platform.shell }}
         cmake-arguments: ${{ matrix.platform.cmake-arguments }}
         cmake-toolchain-file: ${{ matrix.platform.cmake-toolchain-file }}
+        cmake-generator: Ninja
         install-linux-dependencies: true
         sdl-test: true
     - name: Configure (CMake)
       run: |
-        cmake -S . -B build ${{ matrix.platform.cmake-arguments }} -DCMAKE_TOOLCHAIN_FILE=${{ matrix.platform.cmake-toolchain-file }}
+        cmake -S . -B build -GNinja ${{ matrix.platform.cmake-arguments }} -DCMAKE_TOOLCHAIN_FILE=${{ matrix.platform.cmake-toolchain-file }}
     - name: Build (CMake)
       run: |
         cmake --build build
